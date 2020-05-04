@@ -1,8 +1,17 @@
 import tensorflow as tf
 from tensorflow import keras
 from utils import *
+from utils_data import preprocess
+import numpy as np
 from tqdm import tqdm
-import sys
+import sys, librosa
+
+# read data(wav) and get feature(mel spectrogram)
+def parse_preprocess(filename, unused):
+	wav, _ = librosa.load(filename, sr=16000)
+	batch_wav = np.expand_dims(wav, 0)
+	tf_feature = preprocess(batch_wav)
+	return tf_feature, None
 
 
 if tf.__version__ == '1.14.0':
@@ -26,6 +35,7 @@ with tf.compat.v1.Session() as sess:
 		file = data[i]
 		x, _ = parse_preprocess(file, None)
 		X.append(sess.run(x))
+	# X is fed to model._spectrogram
 	feed = {'IteratorGetNext:0': X, 'batch_size:0': len(data)}
 	predictions = sess.run('output_batch:0', feed)
 	corrections = autocorrect(predictions)
