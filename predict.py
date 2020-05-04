@@ -6,6 +6,12 @@ import numpy as np
 from tqdm import tqdm
 import sys, librosa
 
+'''
+this file is used to predict custom audio clips from filenames
+filenames currently are provided from command line args
+'''
+
+
 # read data(wav) and get feature(mel spectrogram)
 def parse_preprocess(filename, unused):
 	wav, _ = librosa.load(filename, sr=16000)
